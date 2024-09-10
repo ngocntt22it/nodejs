@@ -1,48 +1,80 @@
-require('dotenv').config();  
-
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
+
 const app = express();
-const PORT = process.env.PORT || 3000; 
+const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(express.static(path.join(__dirname, 'public')));
 
-let items = [];
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('Failed to connect to MongoDB', err));
+
+const itemSchema = new mongoose.Schema({
+  id: String,
+  name: String,
+  description: String,
+  price: Number,
+});
+
+const Item = mongoose.model('Item', itemSchema);
+
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  });
-  
-
-// Create
-app.post('/api/items', (req, res) => {
-  const newItem = req.body;
-  items.push(newItem);
-  res.status(201).json(newItem);
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Read
-app.get('/api/items', (req, res) => {
-  res.json(items);
+app.post('/api/items', async (req, res) => {
+  const newItem = new Item(req.body);
+  try {
+    await newItem.save();
+    res.status(201).json(newItem);
+  } catch (error) {
+    res.status(400).json({ message: 'Failed to create item', error });
+  }
 });
 
-// Update
-app.put('/api/items/:id', (req, res) => {
-  const id = req.params.id;
+app.get('/api/items', async (req, res) => {
+  try {
+    const items = await Item.find();
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch items', error });
+  }
+});
+
+app.put('/api/items/:id', async (req, res) => {
+  const { id } = req.params;
   const updatedItem = req.body;
-  items = items.map(item => (item.id === id ? updatedItem : item));
-  res.json(updatedItem);
+  try {
+    const item = await Item.findByIdAndUpdate(id, updatedItem, { new: true });
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    res.json(item);
+  } catch (error) {
+    res.status(400).json({ message: 'Failed to update item', error });
+  }
 });
 
-// Delete
-app.delete('/api/items/:id', (req, res) => {
-  const id = req.params.id;
-  items = items.filter(item => item.id !== id);
-  res.status(204).send();
+app.delete('/api/items/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const item = await Item.findByIdAndDelete(id);
+    if (!item) {
+      return res.status(404).json({ message: 'Item not found' });
+    }
+    res.status(204).send();
+  } catch (error) {
+    res.status(400).json({ message: 'Failed to delete item', error });
+  }
 });
 
-// Start Server
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
