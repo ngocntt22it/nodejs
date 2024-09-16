@@ -1,37 +1,44 @@
-<!-- public/index.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD Application</title>
-    <link rel="stylesheet" href="style.css">
+    <title>CRUD Sản phẩm</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
-<body>
-    <div class="container">
-        <h1>CRUD Application</h1>
-        
-        <!-- Form to Add Item -->
-        <form id="itemForm">
-            <input type="text" id="itemInput" placeholder="Enter item name" required>
-            <button type="submit">Add Item</button>
-        </form>
-        
-        <!-- Table to Display Items -->
-        <table id="itemsTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Item</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Items will be dynamically added here -->
-            </tbody>
-        </table>
-    </div>
 
+<body>
+    <div class="m-3">
+        <h1>CRUD Sản phẩm</h1>
+        <div>
+            <form id="itemForm">
+                <label for="itemNameInput">Tên sản phẩm:</label>
+                <input type="text" id="itemNameInput" required>
+
+                <label for="itemDescriptionInput">Link ảnh:</label>
+                <input type="text" id="itemDescriptionInput" required>
+
+                <label for="itemPriceInput">Giá:</label>
+                <input type="number" id="itemPriceInput" step="1" required>
+                <button type="submit">Thêm sản phẩm</button>
+            </form>
+        </div>
+
+        <div class="container-fluid mt-3">
+            <div id="layoutCard" class="row justify-content-center">
+
+
+            </div>
+        </div>
+    </div>
     <script src="app.js"></script>
+    <script>
+      
+       
+    </script>
 </body>
+
 </html>

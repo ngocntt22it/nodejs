@@ -25,6 +25,9 @@ const itemSchema = new mongoose.Schema({
 
 const Item = mongoose.model('Item', itemSchema);
 
+
+
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
@@ -39,6 +42,9 @@ app.post('/api/items', async (req, res) => {
   }
 });
 
+
+
+
 app.get('/api/items', async (req, res) => {
   try {
     const items = await Item.find();
@@ -47,6 +53,10 @@ app.get('/api/items', async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch items', error });
   }
 });
+
+
+
+
 
 app.put('/api/items/:id', async (req, res) => {
   const { id } = req.params;
@@ -62,6 +72,11 @@ app.put('/api/items/:id', async (req, res) => {
   }
 });
 
+
+
+
+
+
 app.delete('/api/items/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -74,6 +89,9 @@ app.delete('/api/items/:id', async (req, res) => {
     res.status(400).json({ message: 'Failed to delete item', error });
   }
 });
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
